@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: order-system-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: order_system
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - order-network
+
+  app:
+    build: .
+    container_name: order-system-app
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      JWT_SECRET: minha-chave-secreta-super-segura-para-portfolio-2024
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/order_system?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&connectTimeout=60000&socketTimeout=60000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - order-network
+
+volumes:
+  mysql_data:
+
+networks:
+  order-network:
+    driver: bridge
