@@ -209,4 +209,4 @@ Content-Type: application/json
 
 ## 👤 Autor
 
-Desenvolvido como projeto de portfólio para demonstrar conhecimento em desenvolvimento Back-end Java.
+Desenvolvido por *Arthur Rodrigues*.
