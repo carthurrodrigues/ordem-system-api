@@ -1,16 +1,16 @@
 # Order System API
 
-API REST de portfolio para gerenciamento de produtos, pedidos, usuarios e estoque. O projeto foi criado para demonstrar fundamentos de back-end Java usados em vagas junior: Spring Boot, autenticacao JWT, autorizacao por perfil, JPA/Hibernate, MySQL, Docker, testes unitarios e documentacao de API.
+API REST para gerenciamento de produtos, pedidos, usuarios e estoque. O projeto concentra uma base de back-end Java com Spring Boot, autenticacao JWT, autorizacao por perfil, JPA/Hibernate, MySQL, Docker, testes unitarios e documentacao de API.
 
-## Por que este projeto importa para recrutadores
+## Visao geral tecnica
 
-- Mostra uma API REST completa, nao apenas CRUD isolado.
-- Usa autenticacao stateless com JWT e Spring Security.
-- Aplica regras de negocio de estoque e fluxo de pedido.
-- Tem testes unitarios para camada de servico.
-- Roda com Docker Compose e banco MySQL.
-- Inclui Swagger/OpenAPI para testar endpoints rapidamente.
-- Possui CI com GitHub Actions executando `mvn test`.
+- API REST organizada por camadas, com controllers, services, repositories, DTOs e entidades JPA.
+- Autenticacao stateless com JWT e autorizacao por perfil usando Spring Security.
+- Regras de negocio para fluxo de pedidos, atualizacao de status e controle de estoque.
+- Tratamento global de excecoes e validacao de entrada com Bean Validation.
+- Testes unitarios para regras da camada de servico.
+- Ambiente local com Docker Compose, MySQL e variaveis de configuracao por `.env`.
+- Documentacao interativa com Swagger/OpenAPI e pipeline de CI executando `mvn test`.
 
 ## Stack
 
