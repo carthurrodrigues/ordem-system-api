@@ -1,0 +1,54 @@
+@baseUrl = http://localhost:8080
+@token = paste-token-here
+@adminToken = paste-admin-token-here
+
+### Health check through public product list
+GET {{baseUrl}}/api/products
+
+### Register user
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Carlos Demo",
+  "email": "demo@example.com",
+  "password": "demo12345"
+}
+
+### Login user
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "demo@example.com",
+  "password": "demo12345"
+}
+
+### Create product as admin
+POST {{baseUrl}}/api/products
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Mechanical Keyboard",
+  "description": "Portfolio sample product",
+  "price": 299.90,
+  "stockQuantity": 12,
+  "category": "Peripherals"
+}
+
+### Create order as user
+POST {{baseUrl}}/api/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 1
+    }
+  ],
+  "deliveryAddress": "Sample Street, 123",
+  "notes": "Deliver after 18h"
+}

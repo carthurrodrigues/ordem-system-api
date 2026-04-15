@@ -1,212 +1,183 @@
-# 🛒 Order System API
+# Order System API
 
-API REST para gerenciamento de pedidos desenvolvida como projeto de portfólio.
+API REST de portfolio para gerenciamento de produtos, pedidos, usuarios e estoque. O projeto foi criado para demonstrar fundamentos de back-end Java usados em vagas junior: Spring Boot, autenticacao JWT, autorizacao por perfil, JPA/Hibernate, MySQL, Docker, testes unitarios e documentacao de API.
 
-## 🚀 Tecnologias
+## Por que este projeto importa para recrutadores
 
-| Tecnologia | Versão | Uso |
-|---|---|---|
-| Java | 17 | Linguagem principal |
-| Spring Boot | 3.2 | Framework principal |
-| Spring Security | 6 | Autenticação e autorização |
-| Spring Data JPA | 3.2 | Persistência de dados |
-| MySQL | 8.0 | Banco de dados |
-| JWT (jjwt) | 0.11.5 | Autenticação stateless |
-| JUnit 5 + Mockito | - | Testes unitários |
-| Docker + Compose | - | Containerização |
-| Lombok | - | Redução de boilerplate |
+- Mostra uma API REST completa, nao apenas CRUD isolado.
+- Usa autenticacao stateless com JWT e Spring Security.
+- Aplica regras de negocio de estoque e fluxo de pedido.
+- Tem testes unitarios para camada de servico.
+- Roda com Docker Compose e banco MySQL.
+- Inclui Swagger/OpenAPI para testar endpoints rapidamente.
+- Possui CI com GitHub Actions executando `mvn test`.
 
----
+## Stack
 
-## 📋 Funcionalidades
+| Area | Tecnologias |
+| --- | --- |
+| Linguagem | Java 17 |
+| Framework | Spring Boot 3.2 |
+| API | Spring Web, Bean Validation, DTOs |
+| Seguranca | Spring Security, JWT, roles USER/ADMIN |
+| Persistencia | Spring Data JPA, Hibernate, MySQL 8 |
+| Testes | JUnit 5, Mockito, H2 |
+| DevOps | Docker, Docker Compose, GitHub Actions |
+| Documentacao | Swagger/OpenAPI |
 
-- ✅ **Autenticação JWT** — Registro e login com token Bearer
-- ✅ **Controle de Acesso** — Roles `USER` e `ADMIN`
-- ✅ **CRUD de Produtos** — Criação, listagem, busca, atualização e remoção
-- ✅ **Gerenciamento de Pedidos** — Criação, consulta e atualização de status
-- ✅ **Controle de Estoque** — Decremento automático ao criar pedido; restauração ao cancelar
-- ✅ **Tratamento de Erros** — Respostas padronizadas com mensagens em português
-- ✅ **Validações** — Bean Validation em todas as entradas
-- ✅ **Testes Unitários** — Service layer com JUnit 5 e Mockito
-- ✅ **Docker** — Multi-stage build + docker-compose completo
+## Funcionalidades
 
----
+- Registro e login de usuarios com retorno de token JWT.
+- Controle de acesso por perfil `USER` e `ADMIN`.
+- Listagem publica de produtos.
+- CRUD de produtos protegido para administradores.
+- Criacao e consulta de pedidos por usuario autenticado.
+- Consulta geral e atualizacao de status por administrador.
+- Controle de estoque ao criar e cancelar pedidos.
+- Tratamento global de erros com respostas padronizadas.
+- Validacao de entrada com Bean Validation.
 
-## 🗂️ Estrutura do Projeto
+## Arquitetura
 
+```text
+src/main/java/com/portfolio/ordersystem
+|-- config        # Security, CORS, data seed, OpenAPI
+|-- controller    # AuthController, ProductController, OrderController
+|-- dto           # Requests and responses
+|-- entity        # User, Product, Order, OrderItem
+|-- exception     # GlobalExceptionHandler and custom exceptions
+|-- repository    # Spring Data JPA repositories
+|-- security      # JWT utilities and authentication filter
+`-- service       # Business rules
 ```
-src/
-├── main/java/com/portfolio/ordersystem/
-│   ├── config/          # SecurityConfig, DataInitializer
-│   ├── controller/      # AuthController, ProductController, OrderController
-│   ├── dto/             # AuthDTO, ProductDTO, OrderDTO
-│   ├── entity/          # User, Product, Order, OrderItem
-│   ├── exception/       # GlobalExceptionHandler, exceptions customizadas
-│   ├── repository/      # UserRepository, ProductRepository, OrderRepository
-│   ├── security/        # JwtUtils, JwtAuthenticationFilter
-│   └── service/         # AuthService, ProductService, OrderService
-└── test/java/com/portfolio/ordersystem/
-    └── service/         # ProductServiceTest, OrderServiceTest
-```
 
----
-
-## ▶️ Como Rodar
-
-### Com Docker (recomendado)
+## Como rodar com Docker
 
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/seu-usuario/order-system.git
-cd order-system
-
-# 2. Suba os containers
-docker-compose up --build
-
-# A API estará disponível em: http://localhost:8080
+git clone https://github.com/carthurrodrigues/ordem-system-api.git
+cd ordem-system-api
+cp .env.example .env
+docker compose up --build
 ```
 
-### Localmente
+A API ficara disponivel em:
 
-Pré-requisitos: Java 17, Maven, MySQL 8
+- API: `http://localhost:8080`
+- Swagger: `http://localhost:8080/swagger-ui/index.html`
+- OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+
+## Como rodar localmente
+
+Pre-requisitos:
+
+- Java 17
+- Maven
+- MySQL 8
 
 ```bash
-# Configure o banco de dados no application.properties
-# e rode:
+cp .env.example .env
 mvn spring-boot:run
 ```
 
-### Rodando os Testes
+## Testes
 
 ```bash
 mvn test
 ```
 
----
+O workflow `.github/workflows/ci.yml` executa os testes automaticamente a cada push ou pull request para a branch `main`.
 
-## 🔐 Autenticação
+## Autenticacao
 
-### 1. Registrar usuário
+### Registrar usuario
+
 ```http
 POST /api/auth/register
 Content-Type: application/json
 
 {
-  "name": "João Silva",
-  "email": "joao@email.com",
-  "password": "senha123"
+  "name": "Carlos Demo",
+  "email": "demo@example.com",
+  "password": "demo12345"
 }
 ```
 
-### 2. Login
+### Login
+
 ```http
 POST /api/auth/login
 Content-Type: application/json
 
 {
-  "email": "joao@email.com",
-  "password": "senha123"
+  "email": "demo@example.com",
+  "password": "demo12345"
 }
 ```
 
-Resposta:
+Resposta esperada:
+
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiJ9...",
   "type": "Bearer",
-  "email": "joao@email.com",
-  "name": "João Silva",
+  "email": "demo@example.com",
+  "name": "Carlos Demo",
   "role": "USER"
 }
 ```
 
-Use o token nas requisições seguintes:
+Use o token nas rotas protegidas:
+
+```http
+Authorization: Bearer <token>
 ```
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+Usuario administrador criado no seed:
+
+```text
+Email: admin@ordersystem.com
+Senha: admin123
 ```
 
-> **Admin padrão criado automaticamente:**
-> - Email: `admin@ordersystem.com`
-> - Senha: `admin123`
+## Endpoints principais
 
----
-
-## 📦 Endpoints
-
-### Produtos
-
-| Método | Endpoint | Auth | Descrição |
-|--------|----------|------|-----------|
-| GET | `/api/products` | Público | Listar produtos |
-| GET | `/api/products?search=note` | Público | Buscar por nome |
-| GET | `/api/products?availableOnly=true` | Público | Apenas em estoque |
-| GET | `/api/products/{id}` | Público | Detalhes de um produto |
+| Metodo | Endpoint | Acesso | Descricao |
+| --- | --- | --- | --- |
+| POST | `/api/auth/register` | Publico | Registrar usuario |
+| POST | `/api/auth/login` | Publico | Autenticar usuario |
+| GET | `/api/products` | Publico | Listar produtos |
+| GET | `/api/products/{id}` | Publico | Detalhar produto |
 | POST | `/api/products` | ADMIN | Criar produto |
 | PUT | `/api/products/{id}` | ADMIN | Atualizar produto |
 | DELETE | `/api/products/{id}` | ADMIN | Remover produto |
-
-### Pedidos
-
-| Método | Endpoint | Auth | Descrição |
-|--------|----------|------|-----------|
 | POST | `/api/orders` | USER | Criar pedido |
-| GET | `/api/orders/my-orders` | USER | Meus pedidos |
-| GET | `/api/orders/{id}` | USER | Detalhes de um pedido |
-| GET | `/api/orders` | ADMIN | Todos os pedidos |
+| GET | `/api/orders/my-orders` | USER | Listar meus pedidos |
+| GET | `/api/orders/{id}` | USER | Detalhar pedido |
+| GET | `/api/orders` | ADMIN | Listar todos os pedidos |
 | PATCH | `/api/orders/{id}/status` | ADMIN | Atualizar status |
 
-### Status de Pedido (fluxo)
-`PENDING` → `CONFIRMED` → `PREPARING` → `SHIPPED` → `DELIVERED`  
-Qualquer status pode ir para `CANCELLED` (exceto `DELIVERED` e `CANCELLED`)
+Arquivo com exemplos de requisicoes: `docs/api.http`.
 
----
+## Fluxo de status do pedido
 
-## 📝 Exemplos de Uso
-
-### Criar Pedido
-```http
-POST /api/orders
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "items": [
-    { "productId": 1, "quantity": 1 },
-    { "productId": 2, "quantity": 2 }
-  ],
-  "deliveryAddress": "Rua das Flores, 123, São Paulo - SP",
-  "notes": "Entregar após 18h"
-}
+```text
+PENDING -> CONFIRMED -> PREPARING -> SHIPPED -> DELIVERED
 ```
 
-### Atualizar Status (Admin)
-```http
-PATCH /api/orders/1/status
-Authorization: Bearer {admin-token}
-Content-Type: application/json
+Pedidos podem ir para `CANCELLED`, exceto quando ja estao `DELIVERED` ou `CANCELLED`.
 
-{ "status": "CONFIRMED" }
-```
+## Decisoes tecnicas
 
----
+- JWT evita sessao em servidor e facilita escalabilidade.
+- DTOs separam contratos de API das entidades JPA.
+- `@RestControllerAdvice` centraliza tratamento de erros.
+- `@Transactional` protege operacoes de escrita.
+- Docker Compose reduz friccao para avaliacao tecnica.
+- Swagger acelera a validacao manual por recrutadores e tech leads.
 
-## 🧪 Cobertura de Testes
+## Autor
 
-- `ProductServiceTest` — 6 testes (findAll, findById, create, update, delete, findAvailable)
-- `OrderServiceTest` — 5 testes (createOrder, estoque insuficiente, status inválido, findMyOrders, not found)
+Carlos Rodrigues
 
----
-
-## 📐 Decisões de Design
-
-- **Stateless**: JWT em vez de sessões, ideal para APIs escaláveis
-- **Multi-stage Docker build**: imagem final leve com apenas o JRE Alpine
-- **Transações**: `@Transactional` nos métodos de escrita para garantir consistência
-- **DTOs**: separação entre camada de apresentação e entidades JPA
-- **Tratamento de erros centralizado**: `@RestControllerAdvice` com respostas padronizadas
-
----
-
-## 👤 Autor
-
-Desenvolvido por *Arthur Rodrigues*.
+- LinkedIn: https://www.linkedin.com/in/carlos-rodrigues-323161377/
+- GitHub: https://github.com/carthurrodrigues
